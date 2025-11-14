@@ -2,12 +2,14 @@ const STORAGE_KEY_TEMPLATE = 'htmlhelper_template';
 const STORAGE_KEY_VARIABLES = 'htmlhelper_variables';
 const STORAGE_KEY_PREVIEW_BG = 'htmlhelper_preview_bg';
 const STORAGE_KEY_EDITOR_HEIGHT = 'htmlhelper_editor_height';
+const STORAGE_KEY_VIEW_MODE = 'htmlhelper_view_mode';
 
 function loadState() {
     const template = localStorage.getItem(STORAGE_KEY_TEMPLATE) || '';
     const variablesJson = localStorage.getItem(STORAGE_KEY_VARIABLES);
     const previewBackground = localStorage.getItem(STORAGE_KEY_PREVIEW_BG) || 'dark';
     const editorHeightRaw = localStorage.getItem(STORAGE_KEY_EDITOR_HEIGHT);
+    const viewMode = localStorage.getItem(STORAGE_KEY_VIEW_MODE) || 'split';
     let variables = {};
     let editorHeight = null;
     
@@ -27,7 +29,7 @@ function loadState() {
         }
     }
     
-    return { template, variables, previewBackground, editorHeight };
+    return { template, variables, previewBackground, editorHeight, viewMode };
 }
 
 function saveState(state) {
@@ -48,6 +50,12 @@ function saveState(state) {
             localStorage.removeItem(STORAGE_KEY_EDITOR_HEIGHT);
         }
     }
+    if (Object.prototype.hasOwnProperty.call(state, 'viewMode')) {
+        const mode = state.viewMode;
+        if (typeof mode === 'string' && mode.length > 0) {
+            localStorage.setItem(STORAGE_KEY_VIEW_MODE, mode);
+        }
+    }
 }
 
 function resetState() {
@@ -55,5 +63,6 @@ function resetState() {
     localStorage.removeItem(STORAGE_KEY_VARIABLES);
     localStorage.removeItem(STORAGE_KEY_PREVIEW_BG);
     localStorage.removeItem(STORAGE_KEY_EDITOR_HEIGHT);
+    localStorage.removeItem(STORAGE_KEY_VIEW_MODE);
 }
 

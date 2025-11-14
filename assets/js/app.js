@@ -18,6 +18,9 @@
     const variablesSection = document.querySelector('.variables-section');
     const editorResizeHandle = document.getElementById('editor-resize-handle');
     const previewBackgroundToggle = document.getElementById('preview-background-toggle');
+    const container = document.querySelector('.container');
+    const mobileViewToolbar = document.querySelector('.mobile-view-toolbar');
+    const mobileViewButtons = mobileViewToolbar ? Array.from(mobileViewToolbar.querySelectorAll('.mobile-view-button')) : [];
 
     function getPreviewBaseStyles(bodyBackground) {
         return `
@@ -49,6 +52,7 @@
     let lastValidRender = '';
     let previewBackground = 'dark';
     let editor = null;
+    let viewMode = 'split';
 
     const CLIPBOARD_FRAGMENT_START = '<!--StartFragment-->';
     const CLIPBOARD_FRAGMENT_END = '<!--EndFragment-->';
@@ -60,6 +64,7 @@
     const PRESERVE_WHITESPACE_TAGS = new Set(['pre', 'code', 'textarea']);
     const HTML_INDENT = '    ';
     const DEFAULT_TAB_SIZE = 4;
+    const VIEW_MODES = new Set(['edit', 'split', 'preview']);
 
     const TRIPLE_VAR_PATTERN = /\{\{\{\s*[A-Za-z_][A-Za-z0-9_]*\s*\}\}\}/;
     const DOUBLE_VAR_PATTERN = /\{\{\s*[A-Za-z_][A-Za-z0-9_]*\s*\}\}/;
@@ -417,7 +422,8 @@
             template: getTemplateValue(),
             variables: buildVariablesObject(),
             previewBackground,
-            editorHeight: getEditorHeightPreference()
+            editorHeight: getEditorHeightPreference(),
+            viewMode
         });
     }
 
@@ -483,6 +489,35 @@
         if (!copyPreviewBtn) return;
         const hasValidRender = !!lastValidRender && previewOverlay.classList.contains('hidden');
         copyPreviewBtn.disabled = !hasValidRender;
+    }
+
+    function applyViewModeClass(mode) {
+        if (!container) return;
+        container.classList.remove('mode-edit', 'mode-split', 'mode-preview');
+        container.classList.add(`mode-${mode}`);
+    }
+
+    function updateMobileToolbar(mode) {
+        if (!mobileViewButtons || mobileViewButtons.length === 0) return;
+        mobileViewButtons.forEach(button => {
+            const buttonMode = button.dataset.viewMode;
+            const isActive = buttonMode === mode;
+            button.classList.toggle('is-active', isActive);
+            button.setAttribute('aria-pressed', String(isActive));
+        });
+    }
+
+    function setViewMode(mode, { persist = true } = {}) {
+        const nextMode = VIEW_MODES.has(mode) ? mode : 'split';
+        viewMode = nextMode;
+        applyViewModeClass(nextMode);
+        updateMobileToolbar(nextMode);
+        if (persist) {
+            saveState({ viewMode: nextMode });
+        }
+        if (editor && nextMode !== 'preview') {
+            setTimeout(() => editor.refresh(), 50);
+        }
     }
 
     let copyPreviewResetTimer = null;
@@ -719,8 +754,12 @@
         let startY = 0;
         let startHeight = 0;
         let totalFlexibleHeight = 0;
+        const isMobileViewport = () => window.matchMedia('(max-width: 768px)').matches;
 
         function startDrag(e) {
+            if (isMobileViewport()) {
+                return;
+            }
             isDragging = true;
             startY = (e.touches && e.touches[0].clientY) || e.clientY;
             const editorRect = editorSection.getBoundingClientRect();
@@ -856,6 +895,15 @@
         });
     }
 
+    if (mobileViewButtons && mobileViewButtons.length) {
+        mobileViewButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const targetMode = button.dataset.viewMode || 'split';
+                setViewMode(targetMode);
+            });
+        });
+    }
+
     function handleTemplateChange() {
         debouncedUpdatePreview();
         saveCurrentState();
@@ -911,6 +959,7 @@
         
         loadVariablesIntoUI(state.variables);
         setPreviewBackground(state.previewBackground || 'dark');
+        setViewMode(state.viewMode || 'split', { persist: false });
         applyEditorHeightPreference(state.editorHeight);
         initializeDivider();
         initializeEditorResize();
