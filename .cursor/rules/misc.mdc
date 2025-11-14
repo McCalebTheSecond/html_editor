@@ -1,0 +1,19 @@
+---
+alwaysApply: true
+---
+## What is HTML Helper?
+
+HTML Helper is a small, single-page, offline HTML playground.
+
+At a high level:
+- **Editor + preview**: The screen is split into an HTML template editor on the left and a live preview on the right.
+- **Variables**: You can define named variables in a simple table, and the template is rendered using those values.
+- **Live feedback**: As you edit the template or variables, the preview updates so you can quickly iterate on snippets, emails, or small pages.
+- **No backend**: Everything runs in the browser, opened directly via `file://` with no server, build step, or network dependency.
+- **Local persistence**: The current template and variables are stored locally so you can close and reopen the page without losing your work.
+
+---
+
+# Misc
+- To open the file in the Chrome browser, do this path: `file://wsl.localhost/Ubuntu/home/caleb/project/html_editor/index.html`
+- This is is a public repo on GitHub so make sure we never ever commit any sensitive information to it.

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTML Helper</title>
+    <link rel="stylesheet" href="assets/vendor/codemirror/lib/codemirror.css">
+    <link rel="stylesheet" href="assets/vendor/codemirror/theme/twilight.css">
+    <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="left-panel">
+            <div class="editor-section">
+                <textarea id="template" spellcheck="false"></textarea>
+            </div>
+            <div class="editor-resize-handle" id="editor-resize-handle" aria-hidden="true"></div>
+            <div class="variables-section">
+                <div class="variables-header">
+                    <label>Variables</label>
+                    <button id="add-variable" type="button">Add variable</button>
+                </div>
+                <table id="variables-table">
+                    <thead>
+                        <tr>
+                            <th>Key</th>
+                            <th>Value</th>
+                        </tr>
+                    </thead>
+                    <tbody id="variables-tbody">
+                    </tbody>
+                </table>
+            </div>
+            <div class="controls">
+                <button id="preview-background-toggle" type="button" aria-label="Toggle preview background" title="Toggle preview background">
+                    <svg class="moon-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="currentColor"/>
+                    </svg>
+                </button>
+                <button id="reset" type="button">Reset</button>
+                <button id="copy-preview" type="button">Copy preview</button>
+            </div>
+        </div>
+        <div class="divider" id="divider"></div>
+        <div class="right-panel">
+            <div class="preview-container" id="preview-container">
+                <iframe id="preview" sandbox="allow-scripts"></iframe>
+                <div id="preview-overlay" class="preview-overlay hidden">
+                    <div class="overlay-message">Invalid variables - fix errors to preview</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="assets/vendor/codemirror/lib/codemirror.js"></script>
+    <script src="assets/vendor/codemirror/mode/xml/xml.js"></script>
+    <script src="assets/vendor/codemirror/mode/javascript/javascript.js"></script>
+    <script src="assets/vendor/codemirror/mode/css/css.js"></script>
+    <script src="assets/vendor/codemirror/mode/htmlmixed/htmlmixed.js"></script>
+    <script src="assets/js/templateEngine.js"></script>
+    <script src="assets/js/persistence.js"></script>
+    <script src="assets/js/app.js"></script>
+</body>
+</html>
+

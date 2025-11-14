@@ -1,0 +1,5 @@
+# Git metadata is large and never needed in Cursor
+.git/
+
+# Vendor bundles are static and make indexing slow
+assets/vendor/
