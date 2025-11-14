@@ -17,3 +17,4 @@ At a high level:
 # Misc
 - To open the file in the Chrome browser, do this path: `file://wsl.localhost/Ubuntu/home/caleb/project/html_editor/index.html`
 - This is is a public repo on GitHub so make sure we never ever commit any sensitive information to it.
+  
